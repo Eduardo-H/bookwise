@@ -1,3 +1,10 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "@rocketseat/eslint-config/react",
+    "next/core-web-vitals"
+  ],
+  "rules": {
+    "no-undef": "off",
+    "camelcase": "off"
+  }
 }
