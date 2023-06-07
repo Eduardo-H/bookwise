@@ -32,10 +32,6 @@ module.exports = {
         'hero-background': "url('/img/hero-background.png')",
       },
     },
-    colors: {
-      'gradient-horizontal': 'rgba(127, 209, 204, 1)',
-      'gradient-vertical': 'rgba(127, 209, 204, 1)',
-    },
   },
   plugins: [],
 }
