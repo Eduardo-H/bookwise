@@ -2,18 +2,24 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Binoculars, SignIn, TrendUp, User } from 'phosphor-react'
 import classnames from 'classnames'
 
 import bookwiseLogo from '../../assets/svg/bookwise-full-logo.svg'
 
 export function Sidebar() {
-  const currentRoute = window.location.pathname
+  const currentRoute = usePathname()
 
   return (
     <aside className="w-60 flex flex-col bg-gray-700 pt-10 pb-6 px-12 my-5 ml-5 rounded-lg">
       <Link href="/">
-        <Image src={bookwiseLogo} alt="BookWise logo" className="mx-auto" />
+        <Image
+          src={bookwiseLogo}
+          alt="BookWise logo"
+          className="mx-auto"
+          priority
+        />
       </Link>
 
       <div className="flex flex-col flex-1 justify-start items-start gap-5 mt-16">

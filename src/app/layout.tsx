@@ -1,9 +1,8 @@
 import { Nunito_Sans } from 'next/font/google'
 
 import '../styles/global.css'
-import { Sidebar } from './components/Sidebar'
 
-const inter = Nunito_Sans({ subsets: ['latin'] })
+const nunito = Nunito_Sans({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'BookWise',
@@ -17,8 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex gap-24 min-h-screen`}>
-        <Sidebar />
+      <body className={`${nunito.className} flex min-h-screen`}>
         {children}
       </body>
     </html>
