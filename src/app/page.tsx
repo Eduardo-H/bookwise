@@ -36,7 +36,7 @@ export default function Home() {
     <>
       <Sidebar />
 
-      <main className="flex-1 px-24">
+      <main className="pl-80 flex-1 px-24">
         <header className="flex gap-3 mt-16 mb-10">
           <TrendUp size={32} className="text-green-100" />
           <h2 className="text-2xl font-bold">Home</h2>

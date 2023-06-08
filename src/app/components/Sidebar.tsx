@@ -12,7 +12,7 @@ export function Sidebar() {
   const currentRoute = usePathname()
 
   return (
-    <aside className="w-60 flex flex-col bg-gray-700 pt-10 pb-6 px-12 my-5 ml-5 rounded-lg">
+    <aside className="fixed h-[calc(100vh-2.5rem)] w-60 flex flex-col bg-gray-700 pt-10 pb-6 px-12 my-5 ml-5 rounded-lg">
       <Link href="/">
         <Image
           src={bookwiseLogo}
@@ -74,7 +74,7 @@ export function Sidebar() {
 
       <Link
         href="/login"
-        className="flex justify-center items-center gap-3 transition-colors hover:text-gray-300"
+        className="w-fit flex justify-center items-center gap-3 mx-auto py-2 px-4 transition-colors rounded hover:bg-opacity-5 hover:bg-gray-100"
       >
         <span className="font-bold">Login</span>
         <SignIn size={20} className="text-green-100" />
