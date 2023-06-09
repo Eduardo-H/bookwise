@@ -49,7 +49,7 @@ module.exports = {
 
     extend: {
       backgroundImage: {
-        'hero-background': "url('/img/hero-background.png')",
+        'hero-background': "url('/images/hero-background.png')",
       },
     },
   },
