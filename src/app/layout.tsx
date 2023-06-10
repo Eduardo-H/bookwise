@@ -1,6 +1,7 @@
 import { Nunito_Sans } from 'next/font/google'
 
 import '../styles/global.css'
+import { RQProvider } from './components/RQProvider'
 
 const nunito = Nunito_Sans({ subsets: ['latin'] })
 
@@ -17,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${nunito.className} flex min-h-screen`}>
-        {children}
+        <RQProvider>{children}</RQProvider>
       </body>
     </html>
   )

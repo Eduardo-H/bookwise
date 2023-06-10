@@ -21,7 +21,7 @@ export function BookCard({
   return (
     <Link
       href="/"
-      className="flex gap-2 p-5 bg-gray-700 rounded-lg border border-gray-700 transition-color hover:border-gray-600"
+      className="flex gap-5 p-5 bg-gray-700 rounded-lg border border-gray-700 transition-color hover:border-gray-600"
     >
       <Image
         src={coverUrl}

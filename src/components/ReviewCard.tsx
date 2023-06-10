@@ -1,23 +1,16 @@
 import Image from 'next/image'
-import dayjs from 'dayjs'
+import dayjs from '@/lib/dayjs'
 
 import { StarReview } from './StarReview'
+import { User } from '@/@types/user'
+import { Book } from '@/@types/book'
 
 interface ReviewCardProps {
-  reviewer: {
-    id: string
-    name: string
-    avatarUrl: string
-  }
+  reviewer: User
   review: string
   reviewDate: Date
   stars: number
-  book: {
-    id: string
-    title: string
-    author: string
-    coverUrl: string
-  }
+  book: Book
 }
 
 export function ReviewCard({
@@ -30,12 +23,12 @@ export function ReviewCard({
   const formatedReviewDate = dayjs().to(dayjs(reviewDate))
 
   return (
-    <div className="flex gap-8 bg-gray-700 p-6 rounded-lg">
+    <div className="flex flex-col gap-8 bg-gray-700 p-6 rounded-lg">
       <header>
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center h-10 w-10 bg-gradient-to-b from-green-100 to-purple-100 rounded-full">
             <Image
-              src={reviewer.avatarUrl}
+              src={reviewer.avatar_url}
               alt={reviewer.name}
               height={36}
               width={36}
@@ -50,24 +43,24 @@ export function ReviewCard({
 
           <StarReview stars={stars} />
         </div>
-
-        <div className="flex gap-5 mt-8">
-          <Image
-            src={book.coverUrl}
-            alt={`Cover of the book ${book.title}`}
-            height={152}
-            width={108}
-            className="h-[152px] w-[108px] rounded"
-          />
-
-          <div>
-            <h5 className="font-bold">{book.title}</h5>
-            <span className="text-sm text-gray-400">{book.author}</span>
-
-            <article className="text-sm text-justify mt-5">{review}</article>
-          </div>
-        </div>
       </header>
+
+      <div className="flex gap-5">
+        <Image
+          src={book.cover_url}
+          alt={`Cover of the book ${book.name}`}
+          height={152}
+          width={108}
+          className="h-[152px] w-[108px] rounded"
+        />
+
+        <div>
+          <h5 className="font-bold">{book.name}</h5>
+          <span className="text-sm text-gray-400">{book.author}</span>
+
+          <article className="text-sm text-justify mt-5">{review}</article>
+        </div>
+      </div>
     </div>
   )
 }

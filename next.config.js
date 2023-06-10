@@ -7,6 +7,11 @@ const nextConfig = {
         hostname: 'github.com',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+      },
     ],
   },
 }
