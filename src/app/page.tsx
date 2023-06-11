@@ -9,8 +9,8 @@ import { api } from '@/lib/axios'
 
 import { BookCard } from '@/components/BookCard'
 import { ReviewCard } from '@/components/ReviewCard'
-import { Sidebar } from './components/Sidebar'
 import { useQuery } from '@tanstack/react-query'
+import { Sidebar } from '@/components/Sidebar'
 
 async function getMostRecentReviews(): Promise<Review[]> {
   const response = await api.get<Review[]>('/reviews/most-recent')
@@ -33,8 +33,6 @@ export default function Home() {
     queryKey: ['mostPopularBooks'],
     queryFn: getMostPopularBooks,
   })
-
-  console.log(mostRecentReviews)
 
   return (
     <>

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Binoculars, SignIn, TrendUp, User } from 'phosphor-react'
 import classnames from 'classnames'
 
-import bookwiseLogo from '../../assets/svg/bookwise-full-logo.svg'
+import bookwiseLogo from '../assets/svg/bookwise-full-logo.svg'
 
 export function Sidebar() {
   const currentRoute = usePathname()
