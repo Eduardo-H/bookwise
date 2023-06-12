@@ -4,6 +4,7 @@ import dayjs from '@/lib/dayjs'
 import { StarReview } from './StarReview'
 import { User } from '@/@types/user'
 import { Book } from '@/@types/book'
+import Link from 'next/link'
 
 interface ReviewCardProps {
   reviewer: User
@@ -26,15 +27,18 @@ export function ReviewCard({
     <div className="flex flex-col gap-8 bg-gray-700 p-6 rounded-lg">
       <header>
         <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center h-10 w-10 bg-gradient-to-b from-green-100 to-purple-100 rounded-full">
+          <Link
+            href={`/${reviewer.id}/profile`}
+            className="flex items-center justify-center h-10 w-10 bg-gradient-to-b from-green-100 to-purple-100 rounded-full"
+          >
             <Image
               src={reviewer.avatar_url}
               alt={reviewer.name}
               height={36}
               width={36}
-              className="rounded-full h-9 w-9"
+              className="rounded-full h-9 w-9 object-cover"
             />
-          </div>
+          </Link>
 
           <div className="flex flex-col flex-1">
             <p className="text-gray-100">{reviewer.name}</p>

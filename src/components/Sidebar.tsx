@@ -62,8 +62,8 @@ export function Sidebar() {
             'flex items-center text-base gap-3 transition-colors hover:text-gray-100',
             {
               "before:content[''] before:h-6 before:w-1 before:bg-gradient-to-b before:from-green-100 before:to-purple-100 before:rounded-full before:mr-4 font-bold text-gray-100":
-                currentRoute === '/profile',
-              'px-8 text-gray-400': currentRoute !== '/profile',
+                currentRoute.endsWith('/profile'),
+              'px-8 text-gray-400': !currentRoute.endsWith('/profile'),
             },
           )}
         >
