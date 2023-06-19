@@ -1,14 +1,19 @@
 'use client'
 
+import Link from 'next/link'
 import Image from 'next/image'
+import { signIn } from 'next-auth/react'
 import { RocketLaunch } from 'phosphor-react'
 
 import googleIcon from '../../assets/svg/google-icon.svg'
 import githubIcon from '../../assets/svg/github-icon.svg'
 import bookwiseLogo from '../../assets/svg/bookwise-logo.svg'
-import Link from 'next/link'
 
 export default function Home() {
+  async function handleSignInWithGoogle() {
+    await signIn('google', { callbackUrl: '/' })
+  }
+
   return (
     <div className="grid md:grid-cols-2 items-center justify-center w-screen h-screen p-5 bg-gray-800">
       <aside className="hidden md:block h-full w-full">
@@ -28,7 +33,10 @@ export default function Home() {
         <p className="text-base text-gray-100">Log in or access as a guest.</p>
 
         <div className="flex flex-col gap-5 mt-10">
-          <button className="flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors hover:bg-gray-500">
+          <button
+            className="flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors hover:bg-gray-500"
+            onClick={handleSignInWithGoogle}
+          >
             <span>
               <Image
                 src={googleIcon}
