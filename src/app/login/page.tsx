@@ -14,6 +14,10 @@ export default function Home() {
     await signIn('google', { callbackUrl: '/' })
   }
 
+  async function handleSignInWithGitHub() {
+    await signIn('github', { callbackUrl: '/' })
+  }
+
   return (
     <div className="grid md:grid-cols-2 items-center justify-center w-screen h-screen p-5 bg-gray-800">
       <aside className="hidden md:block h-full w-full">
@@ -48,7 +52,10 @@ export default function Home() {
             <span className="text-gray-100 font-bold">Login with Google</span>
           </button>
 
-          <button className="flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors hover:bg-gray-500">
+          <button
+            className="flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors hover:bg-gray-500"
+            onClick={handleSignInWithGitHub}
+          >
             <span>
               <Image
                 src={githubIcon}

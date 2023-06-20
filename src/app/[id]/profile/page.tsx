@@ -29,7 +29,7 @@ interface UserReponse extends User {
 
 interface RequestResponse {
   user: UserReponse
-  mostReadCategory: string
+  mostReadCategory: string | null
 }
 
 export default function Profile({ params }: { params: { id: string } }) {
@@ -203,17 +203,19 @@ export default function Profile({ params }: { params: { id: string } }) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
-                <Bookmark size={32} className="text-green-100" />
-                <div className="flex flex-col">
-                  <span className="text-gray-200 font-bold">
-                    {data.mostReadCategory}
-                  </span>
-                  <span className="text-gray-300 text-sm">
-                    Most read category
-                  </span>
+              {data.mostReadCategory && (
+                <div className="flex items-center gap-4">
+                  <Bookmark size={32} className="text-green-100" />
+                  <div className="flex flex-col">
+                    <span className="text-gray-200 font-bold">
+                      {data.mostReadCategory}
+                    </span>
+                    <span className="text-gray-300 text-sm">
+                      Most read category
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

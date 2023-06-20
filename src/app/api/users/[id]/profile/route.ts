@@ -36,7 +36,8 @@ export async function GET(
       ORDER BY total_books DESC
     `
 
-  const mostReadCategory = categoriesCountRaw[0].name
+  const mostReadCategory =
+    categoriesCountRaw.length > 0 ? categoriesCountRaw[0].name : null
 
   return NextResponse.json({ user, mostReadCategory })
 }
