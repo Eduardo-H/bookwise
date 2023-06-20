@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Binoculars, MagnifyingGlass, X } from 'phosphor-react'
+import * as Dialog from '@radix-ui/react-dialog'
 
 import { api } from '@/lib/axios'
 import { Book } from '@/@types/book'
@@ -12,10 +13,13 @@ import { Sidebar } from '@/components/Sidebar'
 import { CategoryButton } from '@/components/CategoryButton'
 import { Spinner } from '@/components/Spinner'
 import { categories } from '../../../prisma/constants/categories'
+import { ReviewModal } from '@/components/ReviewModal'
 
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null)
 
   const {
     data: books,
@@ -39,6 +43,11 @@ export default function Explore() {
   function handleSelectCategory(category: string) {
     setSelectedCategory(category)
     refetch()
+  }
+
+  function handleSelectBook(bookId: string) {
+    setSelectedBookId(bookId)
+    setIsReviewModalOpen(true)
   }
 
   return (
@@ -95,17 +104,24 @@ export default function Explore() {
 
         {!isLoading ? (
           books && books.length > 0 ? (
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 mt-12">
-              {books.map((book) => (
-                <BookCard
-                  key={book.id}
-                  title={book.name}
-                  author={book.author}
-                  coverUrl={book.cover_url}
-                  stars={book.rate}
-                />
-              ))}
-            </div>
+            <Dialog.Root
+              open={isReviewModalOpen}
+              onOpenChange={setIsReviewModalOpen}
+            >
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 mt-12">
+                {books.map((book) => (
+                  <BookCard
+                    key={book.id}
+                    title={book.name}
+                    author={book.author}
+                    coverUrl={book.cover_url}
+                    stars={book.rate}
+                    onClick={() => handleSelectBook(book.id)}
+                  />
+                ))}
+              </div>
+              <ReviewModal bookId={selectedBookId} />
+            </Dialog.Root>
           ) : (
             <div className="flex justify-center mt-12">
               <span className="text-gray-300">No book was found</span>

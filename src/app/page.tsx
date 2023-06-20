@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { CaretRight, TrendUp } from 'phosphor-react'
+import * as Dialog from '@radix-ui/react-dialog'
 
 import { Book } from '@/@types/book'
 import { Review } from '@/@types/review'
@@ -12,6 +13,8 @@ import { ReviewCard } from '@/components/ReviewCard'
 import { useQuery } from '@tanstack/react-query'
 import { Sidebar } from '@/components/Sidebar'
 import { Spinner } from '@/components/Spinner'
+import { useState } from 'react'
+import { ReviewModal } from '@/components/ReviewModal'
 
 async function getMostRecentReviews(): Promise<Review[]> {
   const response = await api.get<Review[]>('/reviews/most-recent')
@@ -26,6 +29,9 @@ async function getMostPopularBooks(): Promise<Book[]> {
 }
 
 export default function Home() {
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null)
+
   const { data: mostRecentReviews, isLoading: isLoadingReviews } = useQuery({
     queryKey: ['mostRecentReviews'],
     queryFn: getMostRecentReviews,
@@ -36,6 +42,11 @@ export default function Home() {
       queryFn: getMostPopularBooks,
     },
   )
+
+  function handleSelectBook(bookId: string) {
+    setSelectedBookId(bookId)
+    setIsReviewModalOpen(true)
+  }
 
   return (
     <>
@@ -89,16 +100,24 @@ export default function Home() {
                   <Spinner />
                 </div>
               ) : mostPopularBooks ? (
-                mostPopularBooks.map((book) => (
-                  <BookCard
-                    key={book.id}
-                    title={book.name}
-                    author={book.author}
-                    coverUrl={book.cover_url}
-                    stars={4}
-                    variant="small"
-                  />
-                ))
+                <Dialog.Root
+                  open={isReviewModalOpen}
+                  onOpenChange={setIsReviewModalOpen}
+                >
+                  {mostPopularBooks.map((book) => (
+                    <BookCard
+                      key={book.id}
+                      title={book.name}
+                      author={book.author}
+                      coverUrl={book.cover_url}
+                      stars={book.rate}
+                      variant="small"
+                      onClick={() => handleSelectBook(book.id)}
+                    />
+                  ))}
+
+                  <ReviewModal bookId={selectedBookId} />
+                </Dialog.Root>
               ) : (
                 <span>No data</span>
               )}

@@ -1,9 +1,9 @@
-import Link from 'next/link'
 import classnames from 'classnames'
 import Image from 'next/image'
 import { StarReview } from './StarReview'
+import { ButtonHTMLAttributes } from 'react'
 
-interface BookCardProps {
+interface BookCardProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   title: string
   author: string
   stars: number
@@ -17,11 +17,12 @@ export function BookCard({
   stars,
   coverUrl,
   variant = 'default',
+  ...rest
 }: BookCardProps) {
   return (
-    <Link
-      href="/"
-      className="flex gap-5 p-5 bg-gray-700 rounded-lg border border-gray-700 transition-color hover:border-gray-600"
+    <button
+      className="flex gap-5 p-5 rounded-lg border border-gray-700 bg-gray-700 transition-color hover:border-gray-600"
+      {...rest}
     >
       <Image
         src={coverUrl}
@@ -34,14 +35,16 @@ export function BookCard({
         })}
       />
 
-      <div className="flex flex-col">
-        <p className="text-base text-gray-100">{title}</p>
-        <span className="text-sm text-gray-400">{author}</span>
+      <div className="flex flex-col h-full items-start">
+        <h6 className="text-base text-start leading-shorter text-gray-100">
+          {title}
+        </h6>
+        <span className="text-sm leading-tall text-gray-400">{author}</span>
 
         <div className="mt-auto">
           <StarReview stars={stars} />
         </div>
       </div>
-    </Link>
+    </button>
   )
 }
