@@ -11,6 +11,7 @@ import { BookCard } from '@/components/BookCard'
 import { ReviewCard } from '@/components/ReviewCard'
 import { useQuery } from '@tanstack/react-query'
 import { Sidebar } from '@/components/Sidebar'
+import { Spinner } from '@/components/Spinner'
 
 async function getMostRecentReviews(): Promise<Review[]> {
   const response = await api.get<Review[]>('/reviews/most-recent')
@@ -25,14 +26,16 @@ async function getMostPopularBooks(): Promise<Book[]> {
 }
 
 export default function Home() {
-  const { data: mostRecentReviews } = useQuery({
+  const { data: mostRecentReviews, isLoading: isLoadingReviews } = useQuery({
     queryKey: ['mostRecentReviews'],
     queryFn: getMostRecentReviews,
   })
-  const { data: mostPopularBooks } = useQuery({
-    queryKey: ['mostPopularBooks'],
-    queryFn: getMostPopularBooks,
-  })
+  const { data: mostPopularBooks, isLoading: isLoadingPopularBooks } = useQuery(
+    {
+      queryKey: ['mostPopularBooks'],
+      queryFn: getMostPopularBooks,
+    },
+  )
 
   return (
     <>
@@ -48,7 +51,11 @@ export default function Home() {
           <div className="flex flex-col gap-3">
             <h6 className="text-sm mb-2 pt-2">Most recent reviews</h6>
 
-            {mostRecentReviews ? (
+            {isLoadingReviews ? (
+              <div className="flex justify-center mt-12">
+                <Spinner />
+              </div>
+            ) : mostRecentReviews ? (
               mostRecentReviews.map((review) => (
                 <ReviewCard
                   key={review.id}
@@ -69,7 +76,7 @@ export default function Home() {
               <div className="flex justify-between items-center">
                 <h6 className="text-sm">Popular books</h6>
                 <Link
-                  href="/"
+                  href="/explore"
                   className="flex items-center gap-2 p-2 font-bold text-sm text-purple-100 transition-colors rounded hover:bg-opacity-5 hover:bg-purple-100"
                 >
                   See all
@@ -77,7 +84,11 @@ export default function Home() {
                 </Link>
               </div>
 
-              {mostPopularBooks ? (
+              {isLoadingPopularBooks ? (
+                <div className="flex justify-center mt-12">
+                  <Spinner />
+                </div>
+              ) : mostPopularBooks ? (
                 mostPopularBooks.map((book) => (
                   <BookCard
                     key={book.id}
