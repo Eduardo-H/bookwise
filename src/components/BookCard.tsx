@@ -36,7 +36,7 @@ export function BookCard({
       />
 
       <div className="flex flex-col h-full items-start">
-        <h6 className="text-base text-start leading-shorter text-gray-100">
+        <h6 className="text-base font-bold text-start leading-shorter text-gray-100">
           {title}
         </h6>
         <span className="text-sm leading-tall text-gray-400">{author}</span>

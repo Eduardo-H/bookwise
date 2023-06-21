@@ -15,9 +15,19 @@ import { Sidebar } from '@/components/Sidebar'
 import { Spinner } from '@/components/Spinner'
 import { useState } from 'react'
 import { ReviewModal } from '@/components/ReviewModal'
+import Image from 'next/image'
+import { formatDateFromNow } from '@/utils/formatDateFromNow'
+import { StarReview } from '@/components/StarReview'
 
-async function getMostRecentReviews(): Promise<Review[]> {
-  const response = await api.get<Review[]>('/reviews/most-recent')
+interface MostRecentReviewsResponse {
+  lastUserBookReview: Review | null
+  mostRecentBookReviews: Review[]
+}
+
+async function getMostRecentReviews(): Promise<MostRecentReviewsResponse> {
+  const response = await api.get<MostRecentReviewsResponse>(
+    '/reviews/most-recent',
+  )
 
   return response.data
 }
@@ -32,7 +42,7 @@ export default function Home() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null)
 
-  const { data: mostRecentReviews, isLoading: isLoadingReviews } = useQuery({
+  const { data: reviews, isLoading: isLoadingReviews } = useQuery({
     queryKey: ['mostRecentReviews'],
     queryFn: getMostRecentReviews,
   })
@@ -60,14 +70,65 @@ export default function Home() {
 
         <div className="grid grid-cols-[70%_30%]  gap-16">
           <div className="flex flex-col gap-3">
+            {reviews && reviews.lastUserBookReview && (
+              <>
+                <div className="flex items-center justify-between">
+                  <h6 className="text-sm mb-2 pt-2">Your last review</h6>
+
+                  <Link
+                    href={`/${reviews.lastUserBookReview.user.id}/profile`}
+                    className="flex items-center gap-2 px-2 py-1 font-bold text-sm text-purple-100 transition-colors rounded hover:bg-opacity-5 hover:bg-purple-100"
+                  >
+                    See all
+                    <CaretRight weight="bold" size={14} />
+                  </Link>
+                </div>
+
+                <div className="flex gap-5 px-6 py-5 rounded-lg bg-gray-600 mb-10">
+                  <Image
+                    src={reviews.lastUserBookReview.book.cover_url}
+                    alt={`Cover of the book ${reviews.lastUserBookReview.book.name}`}
+                    width={108}
+                    height={152}
+                    className="rounded"
+                  />
+
+                  <div className="flexflex-col flex-1">
+                    <header className="flex w-full items-center justify-between">
+                      <span className="text-sm text-gray-300">
+                        {formatDateFromNow(
+                          reviews.lastUserBookReview.created_at,
+                        )}
+                      </span>
+
+                      <StarReview stars={reviews.lastUserBookReview.rate} />
+                    </header>
+
+                    <div className="mt-3">
+                      <h6 className="font-bold leading-short">
+                        {reviews.lastUserBookReview.book.name}
+                      </h6>
+                      <span className="text-sm text-gray-400">
+                        {reviews.lastUserBookReview.book.author}
+                      </span>
+                    </div>
+
+                    <article className="text-sm text-gray-300 text-justify mt-6">
+                      {reviews.lastUserBookReview.description}
+                    </article>
+                  </div>
+                </div>
+              </>
+            )}
+
             <h6 className="text-sm mb-2 pt-2">Most recent reviews</h6>
 
             {isLoadingReviews ? (
               <div className="flex justify-center mt-12">
                 <Spinner />
               </div>
-            ) : mostRecentReviews ? (
-              mostRecentReviews.map((review) => (
+            ) : reviews ? (
+              reviews.mostRecentBookReviews.map((review) => (
                 <ReviewCard
                   key={review.id}
                   reviewer={review.user}
@@ -84,14 +145,15 @@ export default function Home() {
 
           <div>
             <div className="flex flex-col gap-3">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center mb-2">
                 <h6 className="text-sm">Popular books</h6>
+
                 <Link
                   href="/explore"
-                  className="flex items-center gap-2 p-2 font-bold text-sm text-purple-100 transition-colors rounded hover:bg-opacity-5 hover:bg-purple-100"
+                  className="flex items-center gap-2 px-2 py-1 font-bold text-sm text-purple-100 transition-colors rounded hover:bg-opacity-5 hover:bg-purple-100"
                 >
                   See all
-                  <CaretRight weight="bold" size={16} />
+                  <CaretRight weight="bold" size={14} />
                 </Link>
               </div>
 

@@ -1,11 +1,20 @@
 import { NextResponse } from 'next/server'
 
 import { prisma } from '@/lib/prisma'
+import { getServerSession } from 'next-auth'
+import { buildNextAuthOptions } from '../../auth/[...nextauth]/route'
 
 export async function GET() {
+  const session = await getServerSession(buildNextAuthOptions())
+
   const mostRecentBookReviews = await prisma.rating.findMany({
+    where: {
+      NOT: {
+        user_id: session?.user.id,
+      },
+    },
     orderBy: {
-      created_at: 'asc',
+      created_at: 'desc',
     },
     include: {
       user: true,
@@ -14,5 +23,21 @@ export async function GET() {
     take: 10,
   })
 
-  return NextResponse.json([...mostRecentBookReviews])
+  const lastUserBookReview = await prisma.rating.findFirst({
+    where: {
+      user_id: session?.user.id,
+    },
+    orderBy: {
+      created_at: 'desc',
+    },
+    include: {
+      user: true,
+      book: true,
+    },
+  })
+
+  return NextResponse.json({
+    lastUserBookReview,
+    mostRecentBookReviews,
+  })
 }

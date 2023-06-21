@@ -14,7 +14,6 @@ import {
   X,
 } from 'phosphor-react'
 
-import dayjs from '@/lib/dayjs'
 import { api } from '@/lib/axios'
 import { User } from '@/@types/user'
 import { Review } from '@/@types/review'
@@ -22,6 +21,7 @@ import { Review } from '@/@types/review'
 import { Sidebar } from '@/components/Sidebar'
 import { Spinner } from '@/components/Spinner'
 import { StarReview } from '@/components/StarReview'
+import { formatDateFromNow } from '@/utils/formatDateFromNow'
 
 interface UserReponse extends User {
   ratings: Review[]
@@ -109,7 +109,7 @@ export default function Profile({ params }: { params: { id: string } }) {
               data.user.ratings.map((review) => (
                 <div key={review.id} className="flex flex-col gap-2">
                   <span className="text-sm text-gray-300">
-                    {dayjs().to(dayjs(review.created_at))}
+                    {formatDateFromNow(review.created_at)}
                   </span>
 
                   <div className="flex flex-col gap-6 bg-gray-700 p-6 rounded-lg">
@@ -166,7 +166,10 @@ export default function Profile({ params }: { params: { id: string } }) {
 
               <div className="flex flex-col items-center justify-center mt-5">
                 <h2 className="text-xl font-bold">{data.user.name}</h2>
-                <span className="text-sm text-gray-400">member since 2023</span>
+                <span className="text-sm text-gray-400">
+                  member since{' '}
+                  {new Date(data.user.created_at).getFullYear().toString()}
+                </span>
               </div>
             </header>
 

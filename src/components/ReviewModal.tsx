@@ -15,7 +15,7 @@ import { formatDateFromNow } from '@/utils/formatDateFromNow'
 import { StarReview } from './StarReview'
 import { Spinner } from './Spinner'
 import { StarReviewInput } from './StarReviewInput'
-import { SignInModal } from './SingInModal'
+import { SignInModal } from './SignInModal'
 
 interface Category {
   category: {
@@ -45,10 +45,10 @@ async function getBookDetails(
 }
 
 export function ReviewModal({ bookId }: ReviewModalProps) {
-  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
-  const [isReviewBoxOpen, setIsReviewBoxOpen] = useState(false)
   const [reviewText, setReviewText] = useState('')
   const [selectedStarsReviewAmount, setSelectedStarsReviewAmount] = useState(0)
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
+  const [isReviewBoxOpen, setIsReviewBoxOpen] = useState(false)
 
   const { data: session, status } = useSession()
 
@@ -211,7 +211,7 @@ export function ReviewModal({ bookId }: ReviewModalProps) {
                         rows={9}
                         value={reviewText}
                         onChange={(e) => setReviewText(e.target.value)}
-                        className="w-full py-3 px-5 mt-6 text-sm rounded border border-gray-500 text-gray-100 bg-gray-800 placeholder:text-gray-400"
+                        className="w-full py-3 px-5 mt-6 text-sm rounded border border-gray-500 text-gray-100 bg-gray-800 placeholder:text-gray-400 focus:border-green-100 focus:outline-none"
                       ></textarea>
                       <span className="absolute bottom-3 right-3 text-sm text-gray-400">
                         {reviewText.length}/450
