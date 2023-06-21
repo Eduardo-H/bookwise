@@ -1,22 +1,21 @@
+import Link from 'next/link'
 import Image from 'next/image'
+import { useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { useQuery } from '@tanstack/react-query'
 import { BookOpen, BookmarkSimple, Check, X } from 'phosphor-react'
 import * as Dialog from '@radix-ui/react-dialog'
+import classnames from 'classnames'
 
 import { Book } from '@/@types/book'
-
-import { StarReview } from './StarReview'
 import { Review } from '@/@types/review'
 import { api } from '@/lib/axios'
-import { useQuery } from '@tanstack/react-query'
-import { Spinner } from './Spinner'
-import Link from 'next/link'
 import { formatDateFromNow } from '@/utils/formatDateFromNow'
 
-import googleIcon from '../assets/svg/google-icon.svg'
-import githubIcon from '../assets/svg/github-icon.svg'
-import { useState } from 'react'
-import { signIn, useSession } from 'next-auth/react'
+import { StarReview } from './StarReview'
+import { Spinner } from './Spinner'
 import { StarReviewInput } from './StarReviewInput'
+import { SignInModal } from './SingInModal'
 
 interface Category {
   category: {
@@ -56,25 +55,20 @@ export function ReviewModal({ bookId }: ReviewModalProps) {
   const {
     data: book,
     isLoading,
-    isRefetching,
+    refetch,
   } = useQuery({
     queryKey: [`bookDetails_${bookId}`],
     queryFn: () => getBookDetails(bookId),
   })
 
+  const userHasReviewedBook =
+    book && session
+      ? book.ratings.find((review) => review.user.id === session.user.id)
+      : null
+
   const bookCategories = book
     ? book.categories.map((category) => category.category.name)
     : []
-
-  async function handleSignInWithGoogle() {
-    await signIn('google')
-    setIsSignInModalOpen(false)
-  }
-
-  async function handleSignInWithGitHub() {
-    await signIn('github')
-    setIsSignInModalOpen(false)
-  }
 
   function handleOpenReviewBox() {
     if (status === 'unauthenticated') {
@@ -94,13 +88,13 @@ export function ReviewModal({ bookId }: ReviewModalProps) {
       return
     }
 
-    const response = await api.post('/reviews', {
+    await api.post('/reviews', {
       bookId,
       description: reviewText,
       rate: selectedStarsReviewAmount,
     })
 
-    console.log(response.data)
+    refetch()
 
     setReviewText('')
     setSelectedStarsReviewAmount(0)
@@ -121,7 +115,7 @@ export function ReviewModal({ bookId }: ReviewModalProps) {
             />
           </Dialog.Close>
 
-          {!isLoading && !isRefetching && book ? (
+          {!isLoading && book ? (
             <>
               <div className="w-full flex flex-col pt-6 pb-10 px-8 mt-4 bg-gray-700 rounded-lg">
                 <div className="flex gap-8">
@@ -174,7 +168,7 @@ export function ReviewModal({ bookId }: ReviewModalProps) {
               <div className="flex items-center justify-between mt-10 mb-4">
                 <span className="text-sm">Reviews</span>
 
-                {!isReviewBoxOpen && (
+                {!isReviewBoxOpen && !userHasReviewedBook && (
                   <button
                     className="flex items-center gap-2 px-2 py-1 font-bold text-sm text-purple-100 transition-colors rounded hover:bg-opacity-5 hover:bg-purple-100"
                     onClick={handleOpenReviewBox}
@@ -244,7 +238,15 @@ export function ReviewModal({ bookId }: ReviewModalProps) {
 
                 {book.ratings.length > 0 ? (
                   book.ratings.map((review) => (
-                    <div key={review.id} className="p-6 rounded-lg bg-gray-700">
+                    <div
+                      key={review.id}
+                      className={classnames('p-6 rounded-lg', {
+                        'bg-gray-600':
+                          session && session.user.id === review.user.id,
+                        'bg-gray-700':
+                          !session || session.user.id !== review.user.id,
+                      })}
+                    >
                       <header className="flex items-start gap-4">
                         <Link
                           href={`/${review.user.id}/profile`}
@@ -289,51 +291,7 @@ export function ReviewModal({ bookId }: ReviewModalProps) {
         </Dialog.Content>
       </Dialog.Portal>
 
-      <Dialog.Root open={isSignInModalOpen} onOpenChange={setIsSignInModalOpen}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.3)]" />
-
-          <Dialog.Content className="fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] w-[90%] max-w-[516px] py-14 px-[4.5rem] bg-gray-700 rounded-xl">
-            <Dialog.Close asChild>
-              <X
-                size={28}
-                weight="bold"
-                className="fixed p-1 top-4 right-4 text-gray-400 rounded cursor-pointer transition-colors hover:bg-opacity-5 hover:bg-gray-100"
-              />
-            </Dialog.Close>
-
-            <p className="text-center font-bold">Sign in to review this book</p>
-
-            <div className="flex flex-col gap-4 mt-10">
-              <button
-                className="flex items-center gap-5 py-5 px-6 rounded-lg bg-gray-600 transition-colors hover:bg-gray-500"
-                onClick={handleSignInWithGoogle}
-              >
-                <Image
-                  src={googleIcon}
-                  alt="Google logo"
-                  width={24}
-                  height={24}
-                />
-                <span className="text-lg font-bold">Sign in with Google</span>
-              </button>
-
-              <button
-                className="flex items-center gap-5 py-5 px-6 rounded-lg bg-gray-600 transition-colors hover:bg-gray-500"
-                onClick={handleSignInWithGitHub}
-              >
-                <Image
-                  src={githubIcon}
-                  alt="GitHub logo"
-                  width={24}
-                  height={24}
-                />
-                <span className="text-lg font-bold">Sign in with GitHub</span>
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+      <SignInModal isOpen={isSignInModalOpen} onClose={setIsSignInModalOpen} />
     </>
   )
 }

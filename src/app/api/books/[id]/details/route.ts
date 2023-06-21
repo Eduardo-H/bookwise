@@ -17,6 +17,9 @@ export async function GET(
         include: {
           user: true,
         },
+        orderBy: {
+          created_at: 'desc',
+        },
       },
       categories: {
         select: {
