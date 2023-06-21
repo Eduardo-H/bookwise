@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { Star } from 'phosphor-react'
 
 interface StarReviewProps {
@@ -5,33 +6,47 @@ interface StarReviewProps {
 }
 
 export function StarReview({ stars }: StarReviewProps) {
+  const fullStars =
+    Math.floor(stars) > 0
+      ? Array.apply(null, Array(Math.floor(stars))).map(() => {})
+      : Array(0)
+  // const halfStars =
+  //   Math.ceil(stars % 1) > 0
+  //     ? Array.apply(null, Array(Math.ceil(stars % 1))).map(() => {})
+  //     : Array(0)
+  const emptyStart =
+    Math.floor(5 - stars) > 0
+      ? Array.apply(null, Array(Math.floor(5 - stars))).map(() => {})
+      : Array(0)
+
   return (
     <div className="flex items-center gap-1">
-      <Star
-        size={16}
-        weight={stars >= 1 ? 'fill' : 'regular'}
-        className="text-purple-100"
-      />
-      <Star
-        size={16}
-        weight={stars >= 2 ? 'fill' : 'regular'}
-        className="text-purple-100"
-      />
-      <Star
-        size={16}
-        weight={stars >= 3 ? 'fill' : 'regular'}
-        className="text-purple-100"
-      />
-      <Star
-        size={16}
-        weight={stars >= 4 ? 'fill' : 'regular'}
-        className="text-purple-100"
-      />
-      <Star
-        size={16}
-        weight={stars >= 5 ? 'fill' : 'regular'}
-        className="text-purple-100"
-      />
+      {fullStars.map((item, i) => (
+        <Star
+          key={`fullStar_${i}`}
+          size={16}
+          weight="fill"
+          className="text-purple-100"
+        />
+      ))}
+
+      {/* {halfStars.map((item, i) => (
+        <StarHalf
+          key={`halfStar_${i}`}
+          size={16}
+          weight="fill"
+          className="text-purple-100"
+        />
+      ))} */}
+
+      {emptyStart.map((item, i) => (
+        <Star
+          key={`emptyStar_${i}`}
+          size={16}
+          weight="regular"
+          className="text-purple-100"
+        />
+      ))}
     </div>
   )
 }
