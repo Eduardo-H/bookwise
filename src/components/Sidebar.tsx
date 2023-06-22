@@ -18,7 +18,7 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="fixed h-[calc(100vh-2.5rem)] w-60 flex flex-col bg-gray-700 pt-10 pb-6 px-12 my-5 ml-5 rounded-lg">
+    <aside className="fixed hidden h-[calc(100vh-2.5rem)] w-60 lg:flex flex-col bg-gray-700 pt-10 pb-6 px-12 my-5 ml-5 rounded-lg">
       <Link href="/">
         <Image
           src={bookwiseLogo}

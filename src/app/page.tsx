@@ -61,13 +61,13 @@ export default function Home() {
     <>
       <Sidebar />
 
-      <main className="pl-80 flex-1 px-24 pb-5">
+      <main className="pl-6 lg:pl-72 2xl:pl-80 pr-6 2xl:pr-24 pb-5 flex-1">
         <header className="flex items-center gap-3 mt-16 mb-10">
           <TrendUp size={32} className="text-green-100" />
           <h2 className="text-2xl font-bold">Home</h2>
         </header>
 
-        <div className="grid grid-cols-[70%_30%]  gap-16">
+        <div className="grid 2xl:grid-cols-[70%_30%] gap-8 2xl:gap-16">
           <div className="flex flex-col">
             {reviews && reviews.lastUserBookReview && (
               <>
@@ -83,39 +83,44 @@ export default function Home() {
                   </Link>
                 </div>
 
-                <div className="flex gap-5 px-6 py-5 rounded-lg bg-gray-600 mb-10">
-                  <Image
-                    src={reviews.lastUserBookReview.book.cover_url}
-                    alt={`Cover of the book ${reviews.lastUserBookReview.book.name}`}
-                    width={108}
-                    height={152}
-                    className="rounded"
-                  />
+                <div className="px-6 py-5 mb-10 rounded-lg bg-gray-600">
+                  <div className="flex gap-5 ">
+                    <Image
+                      src={reviews.lastUserBookReview.book.cover_url}
+                      alt={`Cover of the book ${reviews.lastUserBookReview.book.name}`}
+                      width={108}
+                      height={152}
+                      className="h-[100px] w-[70px] sm:h-[152px] sm:w-[108px] rounded"
+                    />
 
-                  <div className="flexflex-col flex-1">
-                    <header className="flex w-full items-center justify-between">
-                      <span className="text-sm text-gray-300">
-                        {formatDateFromNow(
-                          reviews.lastUserBookReview.created_at,
-                        )}
-                      </span>
+                    <div className="flex flex-col flex-1">
+                      <header className="flex flex-col sm:flex-row w-full sm:items-center justify-between gap-1">
+                        <span className="text-sm text-gray-300">
+                          {formatDateFromNow(
+                            reviews.lastUserBookReview.created_at,
+                          )}
+                        </span>
 
-                      <StarReview stars={reviews.lastUserBookReview.rate} />
-                    </header>
+                        <StarReview stars={reviews.lastUserBookReview.rate} />
+                      </header>
 
-                    <div className="mt-3">
-                      <h6 className="font-bold leading-short">
-                        {reviews.lastUserBookReview.book.name}
-                      </h6>
-                      <span className="text-sm text-gray-400">
-                        {reviews.lastUserBookReview.book.author}
-                      </span>
+                      <div className="mt-3">
+                        <h6 className="font-bold leading-short">
+                          {reviews.lastUserBookReview.book.name}
+                        </h6>
+                        <span className="text-sm text-gray-400">
+                          {reviews.lastUserBookReview.book.author}
+                        </span>
+                      </div>
+
+                      <article className="text-sm hidden sm:block text-gray-300 text-justify mt-6">
+                        {reviews.lastUserBookReview.description}
+                      </article>
                     </div>
-
-                    <article className="text-sm text-gray-300 text-justify mt-6">
-                      {reviews.lastUserBookReview.description}
-                    </article>
                   </div>
+                  <article className="text-sm block sm:hidden text-gray-300 text-justify mt-6">
+                    {reviews.lastUserBookReview.description}
+                  </article>
                 </div>
               </>
             )}
