@@ -1,20 +1,26 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { signIn } from 'next-auth/react'
 import { RocketLaunch } from 'phosphor-react'
+import classnames from 'classnames'
 
 import googleIcon from '../../assets/svg/google-icon.svg'
 import githubIcon from '../../assets/svg/github-icon.svg'
 import bookwiseLogo from '../../assets/svg/bookwise-logo.svg'
 
 export default function Home() {
+  const [isSigningIn, setIsSigningIn] = useState(false)
+
   async function handleSignInWithGoogle() {
+    setIsSigningIn(true)
     await signIn('google', { callbackUrl: '/' })
   }
 
   async function handleSignInWithGitHub() {
+    setIsSigningIn(true)
     await signIn('github', { callbackUrl: '/' })
   }
 
@@ -38,8 +44,9 @@ export default function Home() {
 
         <div className="flex flex-col gap-5 mt-10">
           <button
-            className="flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors hover:bg-gray-500"
+            className="flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors hover:bg-gray-500 disabled:cursor-not-allowed disabled:bg-gray-600"
             onClick={handleSignInWithGoogle}
+            disabled={isSigningIn}
           >
             <span>
               <Image
@@ -53,8 +60,9 @@ export default function Home() {
           </button>
 
           <button
-            className="flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors hover:bg-gray-500"
+            className="flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors hover:bg-gray-500 disabled:cursor-not-allowed disabled:bg-gray-600"
             onClick={handleSignInWithGitHub}
+            disabled={isSigningIn}
           >
             <span>
               <Image
@@ -69,7 +77,13 @@ export default function Home() {
 
           <Link
             href="/"
-            className="flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors hover:bg-gray-500"
+            className={classnames(
+              'flex items-center gap-3 px-6 h-16 w-full sm:w-[320px] text-gray-100 bg-gray-600 rounded-lg transition-colors',
+              {
+                'cursor-not-allowed bg-gray-600': isSigningIn,
+                'hover:bg-gray-500': !isSigningIn,
+              },
+            )}
           >
             <span className="text-purple-100">
               <RocketLaunch size={24} />
