@@ -14,7 +14,7 @@ export function CategoryButton({
   return (
     <button
       className={classnames(
-        'px-4 py-1 border rounded-full transition-colors hover:bg-purple-200 hover:text-gray-100',
+        'min-w-fit px-4 py-1 border rounded-full transition-colors hover:bg-purple-200 hover:text-gray-100',
         {
           'text-gray-100 bg-purple-200 border-purple-200': selected,
           'border-purple-100 text-purple-100': !selected,
