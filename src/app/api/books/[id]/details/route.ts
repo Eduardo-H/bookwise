@@ -33,12 +33,21 @@ export async function GET(
     },
   })
 
-  const bookRate = await prisma.rating.aggregate({
+  const bookRateAvg = await prisma.rating.aggregate({
     where: {
       book_id: bookId,
     },
     _avg: { rate: true },
   })
 
-  return NextResponse.json({ ...book, rate: bookRate._avg.rate })
+  let bookRate = 0
+
+  if (bookRateAvg._avg.rate) {
+    bookRate =
+      Math.round(bookRateAvg._avg.rate) <= 5
+        ? Math.round(bookRateAvg._avg.rate)
+        : 5
+  }
+
+  return NextResponse.json({ ...book, rate: bookRate })
 }
