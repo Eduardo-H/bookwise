@@ -17,6 +17,9 @@ export async function GET(
         include: {
           book: true,
         },
+        orderBy: {
+          created_at: 'desc',
+        },
       },
     },
   })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
@@ -35,6 +35,7 @@ interface RequestResponse {
 }
 
 export default function Profile({ params }: { params: { id: string } }) {
+  const [filteredReviews, setFilteredReviews] = useState<Review[]>([])
   const [searchQuery, setSearchQuery] = useState('')
 
   const { data: session } = useSession()
@@ -65,7 +66,28 @@ export default function Profile({ params }: { params: { id: string } }) {
       `/users/${params.id}/profile`,
     )
 
+    setFilteredReviews(response.data.user.ratings)
+
     return response.data
+  }
+
+  function handleFilterReviews(event: FormEvent) {
+    event.preventDefault()
+
+    if (!data || data.user.ratings.length === 0) {
+      return
+    }
+
+    const reviews = data.user.ratings.filter((review) =>
+      review.book.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+
+    setFilteredReviews(reviews)
+  }
+
+  function clearSearchQuery() {
+    setFilteredReviews(data ? data.user.ratings : [])
+    setSearchQuery('')
   }
 
   return (
@@ -91,13 +113,15 @@ export default function Profile({ params }: { params: { id: string } }) {
         </header>
 
         <div className="w-full relative mb-8">
-          <input
-            type="text"
-            placeholder="Search a book or author"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 pl-5 pr-12 py-3 text-sm bg-gray-800 border border-gray-500 outline-none rounded placeholder:text-gray-400 focus:border-green-100"
-          />
+          <form onSubmit={handleFilterReviews}>
+            <input
+              type="text"
+              placeholder="Search a book or author"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-12 pl-5 pr-12 py-3 text-sm bg-gray-800 border border-gray-500 outline-none rounded placeholder:text-gray-400 focus:border-green-100"
+            />
+          </form>
 
           {!searchQuery.trim() ? (
             <MagnifyingGlass
@@ -105,11 +129,11 @@ export default function Profile({ params }: { params: { id: string } }) {
               className="absolute right-5 top-1/2 translate-y-[-50%] text-gray-500"
             />
           ) : (
-            <button onClick={() => setSearchQuery('')}>
-              <X
-                size={20}
-                className="absolute right-5 top-1/2 translate-y-[-50%] text-green-100"
-              />
+            <button
+              onClick={clearSearchQuery}
+              className="absolute p-1 right-4 top-1/2 translate-y-[-50%] rounded transition-colors hover:bg-green-200 hover:bg-opacity-25"
+            >
+              <X size={20} className=" text-green-100" />
             </button>
           )}
         </div>
@@ -117,7 +141,7 @@ export default function Profile({ params }: { params: { id: string } }) {
         <div className="flex flex-col gap-5">
           {!isLoadingReviews ? (
             data && data.user.ratings.length > 0 ? (
-              data.user.ratings.map((review) => (
+              filteredReviews.map((review) => (
                 <div key={review.id} className="flex flex-col gap-2">
                   <span className="text-sm text-gray-300">
                     {formatDateFromNow(review.created_at)}
