@@ -10,10 +10,6 @@ export function StarReview({ stars }: StarReviewProps) {
     Math.floor(stars) > 0
       ? Array.apply(null, Array(Math.floor(stars))).map(() => {})
       : Array(0)
-  // const halfStars =
-  //   Math.ceil(stars % 1) > 0
-  //     ? Array.apply(null, Array(Math.ceil(stars % 1))).map(() => {})
-  //     : Array(0)
   const emptyStart =
     Math.floor(5 - stars) > 0
       ? Array.apply(null, Array(Math.floor(5 - stars))).map(() => {})
@@ -29,15 +25,6 @@ export function StarReview({ stars }: StarReviewProps) {
           className="text-purple-100"
         />
       ))}
-
-      {/* {halfStars.map((item, i) => (
-        <StarHalf
-          key={`halfStar_${i}`}
-          size={16}
-          weight="fill"
-          className="text-purple-100"
-        />
-      ))} */}
 
       {emptyStart.map((item, i) => (
         <Star

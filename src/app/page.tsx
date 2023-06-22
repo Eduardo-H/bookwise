@@ -69,11 +69,11 @@ export default function Home() {
         </header>
 
         <div className="grid grid-cols-[70%_30%]  gap-16">
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col">
             {reviews && reviews.lastUserBookReview && (
               <>
-                <div className="flex items-center justify-between">
-                  <h6 className="text-sm mb-2 pt-2">Your last review</h6>
+                <div className="flex items-center justify-between mb-4">
+                  <h6 className="text-sm pt-2">Your last review</h6>
 
                   <Link
                     href={`/${reviews.lastUserBookReview.user.id}/profile`}
@@ -121,71 +121,73 @@ export default function Home() {
               </>
             )}
 
-            <h6 className="text-sm mb-2 pt-2">Most recent reviews</h6>
+            <h6 className="text-sm mb-4 pt-2">Most recent reviews</h6>
 
             {isLoadingReviews ? (
               <div className="flex justify-center mt-12">
                 <Spinner />
               </div>
             ) : reviews ? (
-              reviews.mostRecentBookReviews.map((review) => (
-                <ReviewCard
-                  key={review.id}
-                  reviewer={review.user}
-                  book={review.book}
-                  stars={review.rate}
-                  review={review.description}
-                  reviewDate={review.created_at}
-                />
-              ))
+              <div className="flex flex-col gap-3">
+                {reviews.mostRecentBookReviews.map((review) => (
+                  <ReviewCard
+                    key={review.id}
+                    reviewer={review.user}
+                    book={review.book}
+                    stars={review.rate}
+                    review={review.description}
+                    reviewDate={review.created_at}
+                  />
+                ))}
+              </div>
             ) : (
               <span>No data</span>
             )}
           </div>
 
-          <div>
-            <div className="flex flex-col gap-3">
-              <div className="flex justify-between items-center mb-2">
-                <h6 className="text-sm">Popular books</h6>
+          <div className="flex flex-col">
+            <div className="flex justify-between items-center mb-4">
+              <h6 className="text-sm">Popular books</h6>
 
-                <Link
-                  href="/explore"
-                  className="flex items-center gap-2 px-2 py-1 font-bold text-sm text-purple-100 transition-colors rounded hover:bg-opacity-5 hover:bg-purple-100"
-                >
-                  See all
-                  <CaretRight weight="bold" size={14} />
-                </Link>
-              </div>
-
-              {isLoadingPopularBooks ? (
-                <div className="flex justify-center mt-12">
-                  <Spinner />
-                </div>
-              ) : mostPopularBooks ? (
-                <Dialog.Root
-                  open={isReviewModalOpen}
-                  onOpenChange={setIsReviewModalOpen}
-                >
-                  {mostPopularBooks.map((book) => (
-                    <BookCard
-                      key={book.id}
-                      title={book.name}
-                      author={book.author}
-                      coverUrl={book.cover_url}
-                      stars={book.rate}
-                      variant="small"
-                      onClick={() => handleSelectBook(book.id)}
-                    />
-                  ))}
-
-                  <ReviewModal bookId={selectedBookId} />
-                </Dialog.Root>
-              ) : (
-                <span>No data</span>
-              )}
+              <Link
+                href="/explore"
+                className="flex items-center gap-2 px-2 py-1 font-bold text-sm text-purple-100 transition-colors rounded hover:bg-opacity-5 hover:bg-purple-100"
+              >
+                See all
+                <CaretRight weight="bold" size={14} />
+              </Link>
             </div>
+
+            {isLoadingPopularBooks ? (
+              <div className="flex justify-center mt-12">
+                <Spinner />
+              </div>
+            ) : mostPopularBooks ? (
+              <div className="flex flex-col gap-3">
+                {mostPopularBooks.map((book) => (
+                  <BookCard
+                    key={book.id}
+                    title={book.name}
+                    author={book.author}
+                    coverUrl={book.cover_url}
+                    stars={book.rate}
+                    variant="small"
+                    onClick={() => handleSelectBook(book.id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <span>No data</span>
+            )}
           </div>
         </div>
+
+        <Dialog.Root
+          open={isReviewModalOpen}
+          onOpenChange={setIsReviewModalOpen}
+        >
+          <ReviewModal bookId={selectedBookId} />
+        </Dialog.Root>
       </main>
     </>
   )
