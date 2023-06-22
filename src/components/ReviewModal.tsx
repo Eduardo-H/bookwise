@@ -30,6 +30,8 @@ interface BookDetails extends Book {
 
 interface ReviewModalProps {
   bookId: string | null
+  isOpen: boolean
+  onClose: (isModalOpen: boolean) => void
 }
 
 async function getBookDetails(
@@ -44,7 +46,7 @@ async function getBookDetails(
   return response.data
 }
 
-export function ReviewModal({ bookId }: ReviewModalProps) {
+export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
   const [reviewText, setReviewText] = useState('')
   const [selectedStarsReviewAmount, setSelectedStarsReviewAmount] = useState(0)
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
@@ -101,8 +103,18 @@ export function ReviewModal({ bookId }: ReviewModalProps) {
     setIsReviewBoxOpen(false)
   }
 
+  function toggleModalVisibility(open: boolean) {
+    // Reseting all states before opening or closing the modal
+    setReviewText('')
+    setSelectedStarsReviewAmount(0)
+    setIsSignInModalOpen(false)
+    setIsReviewBoxOpen(false)
+
+    onClose(open)
+  }
+
   return (
-    <>
+    <Dialog.Root open={isOpen} onOpenChange={toggleModalVisibility} modal>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.3)]" />
 
@@ -292,6 +304,6 @@ export function ReviewModal({ bookId }: ReviewModalProps) {
       </Dialog.Portal>
 
       <SignInModal isOpen={isSignInModalOpen} onClose={setIsSignInModalOpen} />
-    </>
+    </Dialog.Root>
   )
 }

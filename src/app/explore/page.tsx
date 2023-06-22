@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Binoculars, MagnifyingGlass, X } from 'phosphor-react'
-import * as Dialog from '@radix-ui/react-dialog'
 
 import { api } from '@/lib/axios'
 import { Book } from '@/@types/book'
@@ -104,24 +103,18 @@ export default function Explore() {
 
         {!isLoading ? (
           books && books.length > 0 ? (
-            <Dialog.Root
-              open={isReviewModalOpen}
-              onOpenChange={setIsReviewModalOpen}
-            >
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 mt-12">
-                {books.map((book) => (
-                  <BookCard
-                    key={book.id}
-                    title={book.name}
-                    author={book.author}
-                    coverUrl={book.cover_url}
-                    stars={book.rate}
-                    onClick={() => handleSelectBook(book.id)}
-                  />
-                ))}
-              </div>
-              <ReviewModal bookId={selectedBookId} />
-            </Dialog.Root>
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 mt-12">
+              {books.map((book) => (
+                <BookCard
+                  key={book.id}
+                  title={book.name}
+                  author={book.author}
+                  coverUrl={book.cover_url}
+                  stars={book.rate}
+                  onClick={() => handleSelectBook(book.id)}
+                />
+              ))}
+            </div>
           ) : (
             <div className="flex justify-center mt-12">
               <span className="text-gray-300">No book was found</span>
@@ -132,6 +125,12 @@ export default function Explore() {
             <Spinner />
           </div>
         )}
+
+        <ReviewModal
+          bookId={selectedBookId}
+          isOpen={isReviewModalOpen}
+          onClose={setIsReviewModalOpen}
+        />
       </main>
     </>
   )

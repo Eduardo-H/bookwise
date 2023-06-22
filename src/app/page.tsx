@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { CaretRight, TrendUp } from 'phosphor-react'
-import * as Dialog from '@radix-ui/react-dialog'
 
 import { Book } from '@/@types/book'
 import { Review } from '@/@types/review'
@@ -182,12 +181,11 @@ export default function Home() {
           </div>
         </div>
 
-        <Dialog.Root
-          open={isReviewModalOpen}
-          onOpenChange={setIsReviewModalOpen}
-        >
-          <ReviewModal bookId={selectedBookId} />
-        </Dialog.Root>
+        <ReviewModal
+          bookId={selectedBookId}
+          isOpen={isReviewModalOpen}
+          onClose={setIsReviewModalOpen}
+        />
       </main>
     </>
   )
