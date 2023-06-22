@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useQuery } from '@tanstack/react-query'
-import { BookOpen, BookmarkSimple, Check, X } from 'phosphor-react'
+import { BookOpen, BookmarkSimple, Check, CircleNotch, X } from 'phosphor-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import classnames from 'classnames'
 
@@ -51,6 +51,7 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
   const [selectedStarsReviewAmount, setSelectedStarsReviewAmount] = useState(0)
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
   const [isReviewBoxOpen, setIsReviewBoxOpen] = useState(false)
+  const [isSubmitingReview, setIsSubmitingReview] = useState(false)
 
   const { data: session, status } = useSession()
 
@@ -82,6 +83,8 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
   }
 
   async function handleCreateReview() {
+    setIsSubmitingReview(true)
+
     if (!reviewText.trim()) {
       window.alert("The review can't be blank.")
       return
@@ -90,17 +93,22 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
       return
     }
 
-    await api.post('/reviews', {
-      bookId,
-      description: reviewText,
-      rate: selectedStarsReviewAmount,
-    })
+    try {
+      await api.post('/reviews', {
+        bookId,
+        description: reviewText,
+        rate: selectedStarsReviewAmount,
+      })
 
-    refetch()
-
-    setReviewText('')
-    setSelectedStarsReviewAmount(0)
-    setIsReviewBoxOpen(false)
+      refetch()
+      setReviewText('')
+      setSelectedStarsReviewAmount(0)
+      setIsReviewBoxOpen(false)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setIsSubmitingReview(false)
+    }
   }
 
   function toggleModalVisibility(open: boolean) {
@@ -118,7 +126,7 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.3)]" />
 
-        <Dialog.Content className="fixed top-0 bottom-0 right-0 w-[660px] py-6 px-12 overflow-y-auto bg-gray-800">
+        <Dialog.Content className="fixed top-0 bottom-0 right-0 w-full md:w-[660px] py-4 md:py-6 px-6 md:px-12 overflow-y-auto bg-gray-800">
           <Dialog.Close asChild>
             <X
               size={28}
@@ -129,23 +137,27 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
 
           {!isLoading && book ? (
             <>
-              <div className="w-full flex flex-col pt-6 pb-10 px-8 mt-4 bg-gray-700 rounded-lg">
+              <div className="w-full flex flex-col pt-6 pb-6 sm:pb-10 px-8 mt-4 bg-gray-700 rounded-lg">
                 <div className="flex gap-8">
                   <Image
                     src={book.cover_url}
                     alt={book.name}
                     width={172}
                     height={242}
-                    className="rounded-lg"
+                    className="w-[80px] h-[110px] sm:w-[172px] sm:h-[242px] rounded-lg"
                   />
 
-                  <div className="flex flex-col">
-                    <h2 className="text-lg font-bold">{book.name}</h2>
-                    <span className="text-gray-300">{book.author}</span>
+                  <div className="flex flex-col gap-1 sm:gap-0">
+                    <h2 className="text-lg font-bold leading-shorter">
+                      {book.name}
+                    </h2>
+                    <span className="text-gray-300 text-sm sm:text-base">
+                      {book.author}
+                    </span>
 
                     <div className="flex flex-col gap-1 mt-auto">
                       <StarReview stars={book.rate} />
-                      <span className="text-gray-400">
+                      <span className="text-gray-400 text-sm sm:text-base">
                         {book.ratings.length} reviews
                       </span>
                     </div>
@@ -154,22 +166,26 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
 
                 <hr className="mt-10 mb-6 bg-gray-600 border-none h-px" />
 
-                <div className="flex items-center gap-10">
-                  <div className="w-1/2 flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-10">
+                  <div className="w-full sm:w-1/2 flex items-center gap-4">
                     <BookmarkSimple size={24} className="text-green-100" />
                     <div className="flex flex-col">
-                      <span className="text-sm text-gray-300">Category</span>
-                      <span className="font-bold text-gray-200">
+                      <span className="text-xs sm:text-sm text-gray-300">
+                        Category
+                      </span>
+                      <span className="text-sm sm:text-base font-bold text-gray-200">
                         {bookCategories.join(', ')}
                       </span>
                     </div>
                   </div>
 
-                  <div className="w-1/2 flex items-center gap-4">
+                  <div className="w-full sm:w-1/2 flex items-center gap-4">
                     <BookOpen size={24} className="text-green-100" />
                     <div className="flex flex-col">
-                      <span className="text-sm text-gray-300">Pages</span>
-                      <span className="font-bold text-gray-200">
+                      <span className="text-xs sm:text-sm text-gray-300">
+                        Pages
+                      </span>
+                      <span className="text-sm sm:text-base font-bold text-gray-200">
                         {book.total_pages}
                       </span>
                     </div>
@@ -193,19 +209,19 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
               <div className="flex flex-col gap-3">
                 {isReviewBoxOpen && session && (
                   <div className="p-6 rounded-lg bg-gray-700">
-                    <header className="flex items-center gap-4">
-                      <div className="flex items-center justify-center h-10 w-10 bg-gradient-to-b from-green-100 to-purple-100 rounded-full">
+                    <header className="flex items-center gap-3 sm:gap-4">
+                      <div className="flex items-center justify-center h-7 w-7 sm:h-10 sm:w-10 bg-gradient-to-b from-green-100 to-purple-100 rounded-full">
                         <Image
                           src={session.user.avatar_url}
                           alt={session.user.name}
                           height={36}
                           width={36}
-                          className="rounded-full h-9 w-9 object-cover"
+                          className="h-6 w-6 sm:w-9 sm:h-9 rounded-full object-cover"
                         />
                       </div>
 
                       <div className="flex flex-col flex-1">
-                        <p className="text-gray-100 font-bold">
+                        <p className="text-gray-100 font-bold text-sm sm:text-base">
                           {session.user.name}
                         </p>
                       </div>
@@ -232,17 +248,26 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
 
                     <footer className="flex justify-end items-center gap-2 mt-3">
                       <button
-                        className="p-2 rounded bg-gray-600 transition-colors hover:bg-gray-500"
+                        className="p-1 sm:p-2 rounded bg-gray-600 transition-colors hover:bg-gray-500 disabled:opacity-90 disabled:cursor-not-allowed disabled:hover:bg-gray-600"
                         onClick={() => setIsReviewBoxOpen(false)}
+                        disabled={isSubmitingReview}
                       >
                         <X size={24} className="text-purple-100" />
                       </button>
 
                       <button
-                        className="p-2 rounded bg-gray-600 transition-colors hover:bg-gray-500"
+                        className="p-1 sm:p-2 rounded bg-gray-600 transition-colors hover:bg-gray-500 disabled:opacity-90 disabled:cursor-not-allowed disabled:hover:bg-gray-600"
                         onClick={handleCreateReview}
+                        disabled={isSubmitingReview}
                       >
-                        <Check size={24} className="text-green-100" />
+                        {!isSubmitingReview ? (
+                          <Check size={24} className="text-green-100" />
+                        ) : (
+                          <CircleNotch
+                            size={24}
+                            className="text-gray-100 animate-spin"
+                          />
+                        )}
                       </button>
                     </footer>
                   </div>
@@ -259,22 +284,22 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
                           !session || session.user.id !== review.user.id,
                       })}
                     >
-                      <header className="flex items-start gap-4">
+                      <header className="flex items-start gap-3 sm:gap-4">
                         <Link
                           href={`/${review.user.id}/profile`}
-                          className="flex items-center justify-center h-10 w-10 bg-gradient-to-b from-green-100 to-purple-100 rounded-full"
+                          className="flex items-center justify-center h-7 w-7 sm:h-10 sm:w-10 bg-gradient-to-b from-green-100 to-purple-100 rounded-full"
                         >
                           <Image
                             src={review.user.avatar_url}
                             alt={review.user.name}
                             height={36}
                             width={36}
-                            className="rounded-full h-9 w-9 object-cover"
+                            className="h-6 w-6 sm:w-9 sm:h-9 rounded-full object-cover"
                           />
                         </Link>
 
                         <div className="flex flex-col flex-1">
-                          <p className="text-gray-100 font-bold">
+                          <p className="text-gray-100 font-bold text-sm sm:text-base">
                             {review.user.name}
                           </p>
                           <span className="text-sm text-gray-400">

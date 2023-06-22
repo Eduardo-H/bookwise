@@ -25,7 +25,7 @@ export function SignInModal({ isOpen, onClose }: SignInModalProps) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.3)]" />
 
-        <Dialog.Content className="fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] w-[90%] max-w-[516px] py-14 px-[4.5rem] bg-gray-700 rounded-xl">
+        <Dialog.Content className="fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] w-[90%] max-w-[516px] py-14 px-7 sm:px-[4.5rem] bg-gray-700 rounded-xl">
           <Dialog.Close asChild>
             <X
               size={28}
@@ -46,8 +46,9 @@ export function SignInModal({ isOpen, onClose }: SignInModalProps) {
                 alt="Google logo"
                 width={24}
                 height={24}
+                className="w-5 h-5 sm:w-6 sm:h-6"
               />
-              <span className="text-lg font-bold">Sign in with Google</span>
+              <span className="sm:text-lg font-bold">Sign in with Google</span>
             </button>
 
             <button
@@ -59,8 +60,9 @@ export function SignInModal({ isOpen, onClose }: SignInModalProps) {
                 alt="GitHub logo"
                 width={24}
                 height={24}
+                className="w-5 h-5 sm:w-6 sm:h-6"
               />
-              <span className="text-lg font-bold">Sign in with GitHub</span>
+              <span className="sm:text-lg font-bold">Sign in with GitHub</span>
             </button>
           </div>
         </Dialog.Content>

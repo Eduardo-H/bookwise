@@ -22,7 +22,6 @@ export function StarReviewInput({
       {starArray.map((item) => (
         <Star
           key={item}
-          size={24}
           weight={
             currentStarNumberHovered >= item || selectedStarsAmount >= item
               ? 'fill'
@@ -30,7 +29,7 @@ export function StarReviewInput({
           }
           onMouseOver={() => setCurrentStarNumberHovered(item)}
           onClick={() => onSelectStarsAmount(item)}
-          className="text-purple-100 cursor-pointer"
+          className="text-purple-100 cursor-pointer text-base sm:text-2xl"
         />
       ))}
     </div>
