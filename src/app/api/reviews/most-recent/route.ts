@@ -6,6 +6,7 @@ import { buildNextAuthOptions } from '../../auth/[...nextauth]/route'
 
 export async function GET() {
   const session = await getServerSession(buildNextAuthOptions())
+  let lastUserBookReview = null
 
   const mostRecentBookReviews = await prisma.rating.findMany({
     where: {
@@ -23,18 +24,20 @@ export async function GET() {
     take: 10,
   })
 
-  const lastUserBookReview = await prisma.rating.findFirst({
-    where: {
-      user_id: session?.user.id,
-    },
-    orderBy: {
-      created_at: 'desc',
-    },
-    include: {
-      user: true,
-      book: true,
-    },
-  })
+  if (session) {
+    lastUserBookReview = await prisma.rating.findFirst({
+      where: {
+        user_id: session.user.id,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      include: {
+        user: true,
+        book: true,
+      },
+    })
+  }
 
   return NextResponse.json({
     lastUserBookReview,
