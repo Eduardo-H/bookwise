@@ -55,7 +55,7 @@ export default function Explore() {
 
       <main className="pl-80 flex-1 px-24 pb-5">
         <header className="flex justify-between items-center mt-16 mb-10">
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3">
             <Binoculars size={32} className="text-green-100" />
             <h2 className="text-2xl font-bold">Explore</h2>
           </div>

@@ -10,18 +10,20 @@ import {
   Books,
   CaretLeft,
   MagnifyingGlass,
+  User as UserIcon,
   UserList,
   X,
 } from 'phosphor-react'
 
 import { api } from '@/lib/axios'
-import { User } from '@/@types/user'
-import { Review } from '@/@types/review'
+import { type User } from '@/@types/user'
+import { type Review } from '@/@types/review'
 
 import { Sidebar } from '@/components/Sidebar'
 import { Spinner } from '@/components/Spinner'
 import { StarReview } from '@/components/StarReview'
 import { formatDateFromNow } from '@/utils/formatDateFromNow'
+import { useSession } from 'next-auth/react'
 
 interface UserReponse extends User {
   ratings: Review[]
@@ -34,6 +36,8 @@ interface RequestResponse {
 
 export default function Profile({ params }: { params: { id: string } }) {
   const [searchQuery, setSearchQuery] = useState('')
+
+  const { data: session } = useSession()
 
   const { data, isLoading: isLoadingReviews } = useQuery({
     queryKey: ['reviews'],
@@ -70,13 +74,20 @@ export default function Profile({ params }: { params: { id: string } }) {
 
       <main className="pl-80 pr-[28rem] pt-16 flex-1 pb-5">
         <header className="flex mb-10">
-          <Link
-            href="/"
-            className="flex items-center gap-1 px-2 py-1 rounded hover:bg-opacity-5 transition-colors hover:bg-gray-100"
-          >
-            <CaretLeft size={16} />
-            <span className="font-bold">Back</span>
-          </Link>
+          {session && session.user.id === params.id ? (
+            <div className="flex items-center gap-3">
+              <UserIcon size={32} className="text-green-100" />
+              <h2 className="text-2xl font-bold">Profile</h2>
+            </div>
+          ) : (
+            <Link
+              href="/"
+              className="flex items-center gap-1 px-2 py-1 rounded hover:bg-opacity-5 transition-colors hover:bg-gray-100"
+            >
+              <CaretLeft size={16} />
+              <span className="font-bold">Back</span>
+            </Link>
+          )}
         </header>
 
         <div className="w-full relative mb-8">
