@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${nunito.className} flex min-h-screen`}>
+      <body className={`${nunito.className} min-h-screen`}>
         <NextAuthProvider>
           <ReactQueryProvider>{children}</ReactQueryProvider>
         </NextAuthProvider>
