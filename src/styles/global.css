@@ -15,9 +15,18 @@ body {
 
 ::-webkit-scrollbar-track {
   @apply bg-gray-800;
+  padding-right: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-700;
   border-radius: 2rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  ::-webkit-scrollbar {
+    height: 0.3rem;
+    width: 0.4rem;
+  }
 }
