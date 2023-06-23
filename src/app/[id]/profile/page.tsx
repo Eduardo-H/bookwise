@@ -95,7 +95,7 @@ export default function Profile({ params }: { params: { id: string } }) {
       <Sidebar />
 
       <div className="flex flex-col px-6 md:px-0">
-        <header className="flex md:hidden mb-10 mt-16">
+        <header className="flex md:hidden mt-8 lg:mt-16 mb-10">
           {session && session.user.id === params.id ? (
             <div className="flex items-center gap-3">
               <UserIcon size={32} className="text-green-100" />

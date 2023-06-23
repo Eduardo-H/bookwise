@@ -4,6 +4,12 @@ import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
 import { buildNextAuthOptions } from '../auth/[...nextauth]/route'
 
+interface RequestBody {
+  bookId: string
+  description: string
+  rate: number
+}
+
 export async function POST(request: Request) {
   const session = await getServerSession(buildNextAuthOptions())
 
@@ -16,7 +22,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const { bookId, description, rate } = await request.json()
+  const { bookId, description, rate }: RequestBody = await request.json()
 
   const review = await prisma.rating.create({
     data: {
