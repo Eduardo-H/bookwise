@@ -6,9 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "migrate": "prisma migrate dev",
-    "generate": "prisma generate"
+    "lint": "next lint"
   },
   "dependencies": {
     "@prisma/client": "^4.15.0",
