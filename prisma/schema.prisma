@@ -11,7 +11,7 @@ datasource db {
 model User {
   id         String   @id @default(uuid())
   name       String
-  avatar_url String?
+  avatar_url String?  @db.Text
   created_at DateTime @default(now())
 
   accounts Account[]
@@ -26,7 +26,7 @@ model Book {
   name        String
   author      String
   summary     String   @db.Text
-  cover_url   String
+  cover_url   String   @db.Text
   total_pages Int
   created_at  DateTime @default(now())
 
@@ -80,12 +80,12 @@ model Account {
   type                String
   provider            String
   provider_account_id String
-  refresh_token       String?
-  access_token        String?
+  refresh_token       String? @db.Text
+  access_token        String? @db.Text
   expires_at          Int?
   token_type          String?
-  scope               String?
-  id_token            String?
+  scope               String? @db.Text
+  id_token            String? @db.Text
   session_state       String?
   user                User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 

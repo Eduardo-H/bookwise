@@ -34,8 +34,8 @@ export async function GET(
       INNER JOIN books ON books.id = ratings.book_id
       INNER JOIN CategoriesOnBooks ON CategoriesOnBooks.book_id = books.id
       INNER JOIN categories ON categories.id = CategoriesOnBooks.categoryId
-      GROUP BY categories.id
-      HAVING ratings.user_id = ${userId}
+      WHERE ratings.user_id = ${userId}
+      GROUP BY categories.id      
       ORDER BY total_books DESC
     `
 
