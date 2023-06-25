@@ -126,7 +126,7 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.3)]" />
 
-        <Dialog.Content className="fixed top-0 bottom-0 right-0 w-full md:w-[660px] py-4 md:py-6 px-6 md:px-12 overflow-y-auto bg-gray-800">
+        <Dialog.Content className="fixed top-0 bottom-0 right-0 w-full md:w-[660px] py-4 md:py-6 px-4 sm:px-6 md:px-12 overflow-y-auto bg-gray-800">
           <Dialog.Close asChild>
             <X
               size={28}

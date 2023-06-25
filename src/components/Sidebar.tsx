@@ -211,7 +211,7 @@ export function Sidebar() {
             ) : (
               <Link
                 href="/login"
-                className="w-fit hidden lg:flex justify-center items-center gap-3 py-2 px-4 transition-colors rounded hover:bg-opacity-5 hover:bg-gray-100"
+                className="w-fit mx-auto flex justify-center items-center gap-3 py-2 px-4 transition-colors rounded hover:bg-opacity-5 hover:bg-gray-100"
               >
                 <span className="font-bold">Login</span>
                 <SignIn size={20} className="text-green-100" />

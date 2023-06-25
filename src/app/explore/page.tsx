@@ -53,7 +53,7 @@ export default function Explore() {
     <>
       <Sidebar />
 
-      <main className="pl-6 lg:pl-72 2xl:pl-80 pr-6 2xl:pr-24 pb-5 flex-1 overflow-x-hidden">
+      <main className="pl-4 sm:pl-6 lg:pl-72 2xl:pl-80 pr-4 sm:pr-6 2xl:pr-24 pb-5 flex-1 overflow-x-hidden">
         <header className="flex flex-col sm:flex-row gap-10 justify-between sm:items-center mt-8 lg:mt-16 mb-10">
           <div className="flex items-center gap-3">
             <Binoculars size={32} className="text-green-100" />

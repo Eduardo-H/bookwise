@@ -40,7 +40,11 @@ export default function Profile({ params }: { params: { id: string } }) {
 
   const { data: session } = useSession()
 
-  const { data, isLoading: isLoadingReviews } = useQuery({
+  const {
+    data,
+    isLoading: isLoadingReviews,
+    isRefetching,
+  } = useQuery({
     queryKey: ['reviews'],
     queryFn: getUserBookReviews,
   })
@@ -94,7 +98,7 @@ export default function Profile({ params }: { params: { id: string } }) {
     <>
       <Sidebar />
 
-      <div className="flex flex-col px-6 md:px-0">
+      <div className="flex flex-col px-4 md:px-0">
         <header className="flex md:hidden mt-8 lg:mt-16 mb-10">
           {session && session.user.id === params.id ? (
             <div className="flex items-center gap-3">
@@ -112,7 +116,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           )}
         </header>
 
-        {data && (
+        {!isLoadingReviews && !isRefetching && data && (
           <div className="block md:fixed md:top-32 md:right-6 xl:right-10 2xl:right-24">
             <div className="flex flex-col items-center px-auto md:px-16 pb-5 rounded border-b md:border-b-0 md:border-l border-gray-700">
               <header className="flex flex-col items-center">
@@ -233,7 +237,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           </div>
 
           <div className="flex flex-col gap-5">
-            {!isLoadingReviews ? (
+            {!isLoadingReviews && !isRefetching ? (
               data && data.user.ratings.length > 0 ? (
                 filteredReviews.map((review) => (
                   <div key={review.id} className="flex flex-col gap-2">
