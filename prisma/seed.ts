@@ -8,6 +8,10 @@ import { users } from './constants/users'
 const prisma = new PrismaClient()
 
 async function main() {
+  const createdUsers = await prisma.user.findMany()
+
+  console.log(createdUsers)
+
   await prisma.rating.deleteMany()
   await prisma.user.deleteMany()
   await prisma.categoriesOnBooks.deleteMany()
@@ -65,12 +69,8 @@ async function main() {
         id: rating.id,
         rate: rating.rate,
         description: rating.description,
-        user: {
-          connect: { id: rating.user_id },
-        },
-        book: {
-          connect: { id: rating.book_id },
-        },
+        user_id: rating.user_id,
+        book_id: rating.book_id,
       },
     })
   })
