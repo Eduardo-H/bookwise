@@ -8,10 +8,6 @@ import { users } from './constants/users'
 const prisma = new PrismaClient()
 
 async function main() {
-  const createdUsers = await prisma.user.findMany()
-
-  console.log(createdUsers)
-
   await prisma.rating.deleteMany()
   await prisma.user.deleteMany()
   await prisma.categoriesOnBooks.deleteMany()
