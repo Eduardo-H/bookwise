@@ -83,8 +83,6 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
   }
 
   async function handleCreateReview() {
-    setIsSubmitingReview(true)
-
     if (!reviewText.trim()) {
       window.alert("The review can't be blank.")
       return
@@ -92,6 +90,8 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
       window.alert('You need to select a rate for this book.')
       return
     }
+
+    setIsSubmitingReview(true)
 
     try {
       await api.post('/reviews', {
@@ -106,6 +106,7 @@ export function ReviewModal({ bookId, isOpen, onClose }: ReviewModalProps) {
       setIsReviewBoxOpen(false)
     } catch (err) {
       console.log(err)
+      setIsSubmitingReview(false)
     } finally {
       setIsSubmitingReview(false)
     }
